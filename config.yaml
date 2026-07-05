@@ -1,0 +1,31 @@
+commands:
+  profile_create:
+    name: profile create
+    description: "Creates profile for user in repository. Profile name has to unique"
+    args: [user, project, name]
+  profile_get:
+    name: profile get
+    args: [name]
+    description: "shows user and repository for profile"
+  profile_list:
+    name: profile list
+    description: "shows list of all profiles"
+  profile_delete:
+    name: profile delete
+    args: [name]
+    description: "deletes profile"
+  help:
+    name: help
+    description: "Shows this manual"
+
+args:
+  user:
+    shortName: u
+    description: name of user
+  name:
+    shortName: n
+    description: unique name of profile
+  project:
+    shortName: p
+    description: name of project
+
