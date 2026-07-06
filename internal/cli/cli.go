@@ -8,33 +8,76 @@ import (
 )
 
 type ServiceInterface interface {
-	ProfileCreate(name string, user string, profile string) error
-	ProfileDelete(name string) error
-	ProfileList() error
-	ProfileGet(name string) error
-	Help() error
+	ProfileCreate(args map[string]string) error
+	ProfileDelete(args map[string]string) error
+	ProfileList(args map[string]string) error
+	ProfileGet(args map[string]string) error
+	Help(args map[string]string) error
 }
 
 type CLI struct {
 	profileService ServiceInterface
 	root           *cobra.Command
 	args           map[string]*string
+	handlers       map[string]func(args map[string]string) error
 }
 
 func NewCLI(config *config.Config, profileService ServiceInterface) (*CLI, error) {
 	root := &cobra.Command{
-		Use:   "cloudcli",
+		Use:   "profile",
 		Short: "Cloud CLI tool",
 		Long:  "A CLI tool for managing cloud profiles",
 	}
 
 	cli := &CLI{profileService: profileService, root: root, args: make(map[string]*string)}
-	for commandName, commandStruct := range config.Commands {
 
+	cli.registerHandlers()
+
+	err := cli.registerCommands(config)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return cli, nil
+}
+
+func (cli *CLI) registerHandlers() {
+	cli.handlers = map[string]func(map[string]string) error{
+		"create": cli.profileService.ProfileCreate,
+		"delete": cli.profileService.ProfileDelete,
+		"list":   cli.profileService.ProfileList,
+		"get":    cli.profileService.ProfileGet,
+	}
+}
+
+func (cli *CLI) registerCommands(config *config.Config) error {
+
+	for argName := range config.Args {
+		var flagValue string
+		cli.args[argName] = &flagValue
+	}
+
+	for commandName, commandStruct := range config.Commands {
+		handler, exists := cli.handlers[commandName]
+		if !exists {
+			return fmt.Errorf("handler for command '%s' not found", commandName)
+		}
 		command := &cobra.Command{
 			Use:   commandName,
 			Short: commandStruct.Description,
 			Long:  commandStruct.Description,
+			Run: func(cmd *cobra.Command, args []string) {
+				flags := make(map[string]string)
+				for name, ptr := range cli.args {
+					if ptr != nil {
+						flags[name] = *ptr
+					}
+				}
+				if err := handler(flags); err != nil {
+					fmt.Printf("Error: %v\n", err)
+				}
+			},
 		}
 
 		for _, argName := range commandStruct.ArgNames {
@@ -42,20 +85,22 @@ func NewCLI(config *config.Config, profileService ServiceInterface) (*CLI, error
 			argStruct, ok := config.Args[argName]
 
 			if !ok {
-				return nil, fmt.Errorf("argument '%s' not found", argName)
+				return fmt.Errorf("argument '%s' not found", argName)
 			}
-
-			var flagValue string
-			cli.args[argName] = &flagValue
 
 			command.Flags().StringVarP(cli.args[argName], argName, argStruct.ShortName, "", argStruct.Description)
 			err := command.MarkFlagRequired(argName)
 
 			if err != nil {
-				return nil, err
+				return err
 			}
+
 		}
-		root.AddCommand(command)
+		cli.root.AddCommand(command)
 	}
-	return cli, nil
+	return nil
+}
+
+func (cli *CLI) Run() error {
+	return cli.root.Execute()
 }
