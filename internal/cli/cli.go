@@ -12,7 +12,6 @@ type ServiceInterface interface {
 	ProfileDelete(args map[string]string) error
 	ProfileList(args map[string]string) error
 	ProfileGet(args map[string]string) error
-	Help(args map[string]string) error
 }
 
 type CLI struct {
