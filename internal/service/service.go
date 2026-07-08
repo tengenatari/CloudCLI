@@ -2,7 +2,6 @@ package service
 
 import (
 	"CloudCLI/internal/models"
-	"errors"
 	"fmt"
 	"regexp"
 )
@@ -32,66 +31,6 @@ func getParam(paramName string, args map[string]string) (string, error) {
 		return "", fmt.Errorf("%s is required and may contain only letters, numbers, and hyphens", param)
 	}
 	return param, nil
-}
-
-func (service *ProfileService) ProfileCreate(args map[string]string) error {
-	var name, project, user string
-
-	name, err := getParam("name", args)
-	if err != nil {
-		return err
-	}
-	user, err = getParam("user", args)
-	if err != nil {
-		return err
-	}
-	project, err = getParam("project", args)
-	if err != nil {
-		return err
-	}
-
-	return service.repository.ProfileCreate(user, name, project)
-
-}
-
-func (service *ProfileService) ProfileDelete(args map[string]string) error {
-	name, err := getParam("name", args)
-	if err != nil {
-		return err
-	}
-	err = service.repository.ProfileDelete(name)
-	if err != nil {
-		return fmt.Errorf("error deleting profile: no such profile")
-	}
-	return nil
-}
-
-func (service *ProfileService) ProfileList(args map[string]string) error {
-	profiles, err := service.repository.ProfileList()
-	if err != nil {
-		return fmt.Errorf("error listing profiles: %v", err)
-	}
-	for profileName, profile := range profiles {
-		printProfile(profileName, profile)
-	}
-	return nil
-}
-
-func (service *ProfileService) ProfileGet(args map[string]string) error {
-
-	name, err := getParam("name", args)
-
-	if err != nil {
-		return err
-	}
-	profile, err := service.repository.ProfileGet(name)
-
-	if err != nil {
-		return errors.New("profile not found")
-	}
-
-	printProfile(name, profile)
-	return nil
 }
 
 func printProfile(name string, profile *models.Profile) {
