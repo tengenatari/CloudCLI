@@ -2,9 +2,39 @@
 
 ![Go Version](https://img.shields.io/badge/Go-1.25-blue)
 
+
+## Команды
+
+
+Сборка утилиты
+```bash
+go build -o mws ./cmd/app
+```
+
+Запуск всех тестов
+```bash
+go test -cover ./...
+```
+
 ## Описание
 
 CLI позволяющий управлять профилями юзеров
+
+Создание профиля
+profile create --name --user --project
+
+Удаление профиля
+profile delete --name
+
+Получение информации о профиле
+profile get --name
+
+Список всех профилей
+profile list
+
+Справка
+profile help
+
 
 ## Архитектура
  - **CLI layer** - Cobra
