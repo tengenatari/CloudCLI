@@ -16,19 +16,26 @@ type ServiceInterface interface {
 
 type CLI struct {
 	profileService ServiceInterface
+	execRoot       *cobra.Command
 	root           *cobra.Command
 	args           map[string]*string
 	handlers       map[string]func(args map[string]string) error
 }
 
 func NewCLI(config *config.Config, profileService ServiceInterface) (*CLI, error) {
-	root := &cobra.Command{
-		Use:   "profile",
-		Short: "Cloud CLI tool",
-		Long:  "A CLI tool for managing cloud profiles",
+	execRoot := &cobra.Command{
+		Use:   "manage",
+		Short: "Cloud manage CLI tool",
+		Long:  "A CLI tool for managing cloud",
 	}
 
-	cli := &CLI{profileService: profileService, root: root, args: make(map[string]*string)}
+	root := &cobra.Command{
+		Use:   "profile",
+		Short: "managing profiles",
+		Long:  "you can manage profiles: delete, create, list, get",
+	}
+
+	cli := &CLI{profileService: profileService, execRoot: execRoot, root: root, args: make(map[string]*string)}
 
 	cli.registerHandlers()
 
@@ -97,9 +104,10 @@ func (cli *CLI) registerCommands(config *config.Config) error {
 		}
 		cli.root.AddCommand(command)
 	}
+	cli.execRoot.AddCommand(cli.root)
 	return nil
 }
 
 func (cli *CLI) Run() error {
-	return cli.root.Execute()
+	return cli.execRoot.Execute()
 }
