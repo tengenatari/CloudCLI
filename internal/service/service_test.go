@@ -15,10 +15,10 @@ type ServiceSuite struct {
 	service    *ProfileService
 }
 
-func (suite *ServiceSuite) SetupTest() {
-	suite.repository = mocks.NewRepositoryInterface(suite.T())
-	suite.service = NewProfileService(suite.repository)
-	suite.ctx = context.Background()
+func (s *ServiceSuite) SetupTest() {
+	s.repository = mocks.NewRepositoryInterface(s.T())
+	s.service = NewProfileService(s.repository)
+	s.ctx = context.Background()
 }
 
 func TestRunServiceSuite(t *testing.T) {
