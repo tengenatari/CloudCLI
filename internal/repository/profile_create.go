@@ -8,7 +8,7 @@ import (
 
 func (y *YamlRepository) ProfileCreate(user, name, project string) error {
 
-	profile, _ := LoadProfile(name)
+	profile, _ := LoadProfile(name, y.dir)
 
 	if profile != nil {
 		return fmt.Errorf("profile %s already exists", name)
@@ -20,5 +20,5 @@ func (y *YamlRepository) ProfileCreate(user, name, project string) error {
 	}
 
 	profile = &models.Profile{User: user, Project: project}
-	return SaveProfile(profile, name)
+	return SaveProfile(profile, name, y.dir)
 }

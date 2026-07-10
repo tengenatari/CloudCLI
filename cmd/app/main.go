@@ -15,7 +15,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	yamlRepository := repository.NewYamlRepository()
+	yamlRepository := repository.NewYamlRepository(".")
 
 	profileService := service.NewProfileService(yamlRepository)
 

@@ -6,7 +6,7 @@ import (
 )
 
 func (y *YamlRepository) ProfileDelete(name string) error {
-	profile, _ := LoadProfile(name)
+	profile, _ := LoadProfile(name, y.dir)
 	if profile == nil {
 		return fmt.Errorf("profile %s not found", name)
 	}
