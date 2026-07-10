@@ -8,11 +8,11 @@
 
 Сборка утилиты
 
-Для Windows
+**Windows:**
 ```bash
 go build -o mws.exe ./cmd/app
 ```
-Для Linux
+**Linux:**
 ```bash
 go build -o mws ./cmd/app
 ```
@@ -28,17 +28,17 @@ CLI позволяющий управлять профилями юзеров
 
 Создание профиля
 ```bash
-profile create --name --user --project
+profile create --name <name> --user <user> --project <project>
 ```
 
 Удаление профиля
 ```bash
-profile delete --name
+profile delete --name <name>
 ```
 
 Получение информации о профиле
 ```bash
-profile get --name
+profile get --name <name>
 ```
 
 Список всех профилей
@@ -48,6 +48,7 @@ profile list
 
 Справка
 ```bash
+help
 profile help
 ```
 
