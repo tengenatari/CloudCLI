@@ -21,19 +21,29 @@ go test -cover ./...
 CLI позволяющий управлять профилями юзеров
 
 Создание профиля
+```bash
 profile create --name --user --project
+```
 
 Удаление профиля
+```bash
 profile delete --name
+```
 
 Получение информации о профиле
+```bash
 profile get --name
+```
 
 Список всех профилей
+```bash
 profile list
+```
 
 Справка
+```bash
 profile help
+```
 
 
 ## Архитектура
