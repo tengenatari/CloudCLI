@@ -12,7 +12,7 @@ func (suite *RepositorySuite) TestProfileDeleteCorrect() {
 	errCreate := suite.repository.ProfileCreate(user, name, project)
 	errDelete := suite.repository.ProfileDelete(name)
 	assert.NoError(suite.T(), errCreate)
-	assert.Error(suite.T(), errDelete)
+	assert.NoError(suite.T(), errDelete)
 
 }
 

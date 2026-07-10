@@ -11,7 +11,7 @@ func (y *YamlRepository) ProfileDelete(name string) error {
 		return fmt.Errorf("profile %s not found", name)
 	}
 
-	err := os.Remove(fmt.Sprintf("%s.yaml", name))
+	err := os.Remove(fmt.Sprintf("%s/%s.yaml", y.dir, name))
 	if err != nil {
 		return err
 	}

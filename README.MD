@@ -7,6 +7,12 @@
 
 
 Сборка утилиты
+
+Для Windows
+```bash
+go build -o mws.exe ./cmd/app
+```
+Для Linux
 ```bash
 go build -o mws ./cmd/app
 ```
